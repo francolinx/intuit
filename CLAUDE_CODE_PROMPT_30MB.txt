@@ -1,0 +1,45 @@
+You are Claude Code acting as the final execution engineer for our Intuit SMB Underwriting Hackathon submission under a strict 30 MB file limit.
+
+Important: full train.csv is intentionally omitted because it is ~36 MB. Do not try to retrain the full model. Use the current validator-passing fallback submission as the base and only run low-risk final checks.
+
+Available files:
+- data/validation.csv
+- data/test.csv
+- data/data_dictionary.csv
+- data/intervention_queries.csv
+- data/cohort_week_definitions.csv
+- data/submission_B_template.csv
+- derived/verified_dataset_diagnostics.md
+- derived/train_default_events_minimal.csv
+- derived/train_timing_curves_by_group.csv
+- expected_ids/manifest.json
+- expected_ids/applicant_ids.txt
+- expected_ids/query_ids.txt
+- fallback_submission/submission_A_decisions.csv
+- fallback_submission/submission_B_trajectory.csv
+- fallback_submission/submission_C_counterfactuals.csv
+- fallback_submission/submission_D_writeup.pdf
+- validate_submission.py
+- requirements.txt
+- docs/final_team_master_plan_and_rubric.md
+- docs/final_team_master_plan_short.md
+
+Mission:
+1. Copy fallback_submission/ to final_submission/.
+2. Run `python validate_submission.py final_submission/` and confirm PASS.
+3. Inspect current fallback diagnostics.
+4. Run A threshold sensitivity using current predicted_pd values and validation outcomes only.
+5. Only change A decisions if a nearby cutoff materially improves validation profit and stays economically coherent.
+6. If A changes, regenerate B using approved applications and `derived/train_timing_curves_by_group.csv`.
+7. Optionally test B risk-bucket timing curves using the derived timing file. Keep only if safer/better than fallback.
+8. Run C diagnostics by intervenable flag and feature group. Do not rebuild C unless current non-intervenable/proxy movements are dangerously large or intervals are too narrow.
+9. Keep fallback D unless A/B/C materially changes.
+10. Re-run validator and create diagnostics summaries.
+
+Final output folder must contain exactly:
+- submission_A_decisions.csv
+- submission_B_trajectory.csv
+- submission_C_counterfactuals.csv
+- submission_D_writeup.pdf
+
+Never ship a speculative version. If improvements are not clearly better, keep fallback unchanged.
